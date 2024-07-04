@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="./getAttributesListString.js"></script>
+    <script type="module" src="./BaseButton.js"></script>
+    <script type="module" src="./IconButton.js"></script>
+    <script type="module" src="./Button.js"></script>
+    <script type="text/javascript" src="./hello.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <title>Button With Variants</title>
+</head>
+<body>
+    <section style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello">
+                Primary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello"></icon-button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello" variant="secondary">
+                Secondary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello" variant="secondary"></icon-button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello" variant="tertiary">
+                Tertiary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello" variant="tertiary"></icon-button>
+        </div>
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

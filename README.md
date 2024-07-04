@@ -60,9 +60,7 @@ customElements.define('custom-element', TodoList)
 </html>
 ```
 
-## Experimento 1
-
-Lista de Afazeres
+## Experimento 1: Lista de Afazeres
 
 `main.js`
 ```js
@@ -198,6 +196,169 @@ customElements.define('todo-list', TodoList)
     >
     </todo-list>
     <script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
+```
+
+## Experimento 2: Botão com Variantes e Ícones
+
+`BaseButton.js`
+```js
+'use strict';
+
+class BaseButton extends HTMLElement {
+    constructor() {
+        super()
+
+        this.attachShadow({ mode: 'open' })
+    }
+
+    render() {
+        const template = document.createElement('template')
+        const variant = this.getAttribute('variant')
+        const onClick = this.getAttribute('onClick')
+        const className = this.getAttribute('class')
+
+        // Slots funcionam como childrens no HTML
+        template.innerHTML = `
+            <style>
+                @import "./styles.css";
+            </style>
+            <button type="button" class="button ${className} variant-${variant || 'primary'}" onclick="${onClick && onClick + "()"}">
+                <slot></slot>
+            </button>
+        `
+
+        this.shadowRoot.appendChild(
+            template.content.cloneNode(true)
+        )
+    }
+
+    connectedCallback() {
+        this.render()
+    }
+}
+
+customElements.define('base-button', BaseButton)
+```
+
+`Button.js`
+```js
+'use strict';
+
+import { getAttributesListString } from './getAttributesListString.js';
+
+class Button extends HTMLElement {
+    constructor() {
+        super()
+
+        this.attachShadow({ mode: 'open' })
+    }
+
+    render() {
+        const template = document.createElement('template')
+        const icon = this.getAttribute('icon')
+        const attributesString = getAttributesListString(this.attributes)
+
+        // Slots funcionam como childrens no HTML
+        template.innerHTML = `
+            <base-button ${attributesString}>
+                ${icon ? `<ion-icon name="${icon}"></ion-icon>` : ''}
+                <span class="label">
+                    <slot></slot>
+                </span>
+            </base-button>
+        `
+
+        this.shadowRoot.appendChild(
+            template.content.cloneNode(true)
+        )
+    }
+
+    connectedCallback() {
+        this.render()
+    }
+}
+
+customElements.define('custom-button', Button)
+```
+
+`IconButton.js`
+```js
+'use strict';
+
+import { getAttributesListString } from "./getAttributesListString.js";
+
+class IconButton extends HTMLElement {
+    constructor() {
+        super()
+
+        this.attachShadow({ mode: 'open' })
+    }
+
+    render() {
+        const template = document.createElement('template')
+        const icon = this.getAttribute('icon')
+        const attributesString = getAttributesListString(this.attributes)
+
+        // Slots funcionam como childrens no HTML
+        template.innerHTML = `
+            <base-button ${attributesString} class="icon">
+                ${icon ? `<ion-icon name="${icon}"></ion-icon>` : ''}
+            </base-button>
+        `
+
+        this.shadowRoot.appendChild(
+            template.content.cloneNode(true)
+        )
+    }
+
+    connectedCallback() {
+        this.render()
+    }
+}
+
+customElements.define('icon-button', IconButton)
+```
+
+`index.html`
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="./getAttributesListString.js"></script>
+    <script type="module" src="./BaseButton.js"></script>
+    <script type="module" src="./IconButton.js"></script>
+    <script type="module" src="./Button.js"></script>
+    <script type="text/javascript" src="./hello.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <title>Button With Variants</title>
+</head>
+<body>
+    <section style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello">
+                Primary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello"></icon-button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello" variant="secondary">
+                Secondary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello" variant="secondary"></icon-button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <custom-button icon="heart" onClick="hello" variant="tertiary">
+                Tertiary
+            </custom-button>
+            <icon-button icon="heart" onClick="hello" variant="tertiary"></icon-button>
+        </div>
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
 ```
